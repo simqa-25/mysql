@@ -1,0 +1,208 @@
+-- EXO TD 1
+
+CREATE TABLE Film (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   
+    Titre VARCHAR(100) NOT NULL,         
+    Annee INT NOT NULL,                  
+    Realisateur INT NOT NULL,            
+    Duree INT NOT NULL,                  
+    Resume TEXT,                         
+   
+);
+
+CREATE TABLE Realisateur (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   
+    Nom VARCHAR(50) NOT NULL,            
+    Prenom VARCHAR(50) NOT NULL,         
+    Annee_naissance INT NOT NULL         
+);
+
+CREATE TABLE Client (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   
+    Nom VARCHAR(50) NOT NULL,            
+    Prenom VARCHAR(50) NOT NULL,         
+    CodePostal VARCHAR(10) NOT NULL      
+);
+
+
+
+
+
+-- EXO TD2
+
+SELECT * 
+FROM frequentation_cinema 
+WHERE Année > 2000;
+
+
+SELECT * 
+FROM frequentation_cinema 
+WHERE Année > 2000 AND Indice_de_frequentation > 10;
+
+
+SELECT * 
+FROM frequentation_cinema 
+WHERE COMMUNE LIKE 'M%';
+
+
+SELECT COMMUNE 
+FROM frequentation_cinema 
+WHERE Année = 1961 AND Indice_de_frequentation > 10;
+
+
+UPDATE frequentation_cinema 
+SET COMMUNE = 'Marseille' 
+WHERE COMMUNE = 'Nice' AND Année = 1960;
+
+
+SELECT * 
+FROM frequentation_cinema 
+WHERE COMMUNE = 'Marseille' AND Année = 1960;
+DELETE FROM frequentation_cinema 
+WHERE COMMUNE = 'Marseille' AND Année = 1960;
+
+
+
+
+
+-- EXO TD3
+
+-- Supprimez le Code Postal de la table Client
+
+ALTER TABLE Client 
+DROP COLUMN CodePostal;
+
+
+-- Rajoutez le Code Postal en nombre entier qui peut être NULL
+
+ALTER TABLE Client 
+ADD COLUMN CodePostal INT NULL;
+
+
+-- Modifiez le Code Postal pour qu’il redevienne un VARCHAR de longueur maximale
+
+ALTER TABLE Client 
+MODIFY COLUMN CodePostal VARCHAR(255) NULL;
+
+
+-- Renommez l'id en id_client en conservant ses contraintes
+
+ALTER TABLE Client 
+CHANGE COLUMN ID id_client INT AUTO_INCREMENT PRIMARY KEY;
+
+-- Renommez Réalisateur de la table film en id_réalisateur en conservant ses contraintes
+
+ALTER TABLE Film 
+CHANGE COLUMN Realisateur id_realisateur INT NOT NULL;
+
+
+
+
+CREATE TABLE Film (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   
+    Titre VARCHAR(100) NOT NULL,         
+    Annee INT NOT NULL,                  
+    id_realisateur INT NOT NULL,         
+    Duree INT NOT NULL,                  
+    Resume TEXT,                         
+    
+);
+
+CREATE TABLE Realisateur (
+    ID INT AUTO_INCREMENT PRIMARY KEY,   
+    Nom VARCHAR(50) NOT NULL,            
+    Prenom VARCHAR(50) NOT NULL,         
+    Annee_naissance INT NOT NULL         
+);
+
+CREATE TABLE Client (
+    id_client INT AUTO_INCREMENT PRIMARY KEY,   
+    Nom VARCHAR(50) NOT NULL,                   
+    Prenom VARCHAR(50) NOT NULL,               
+    CodePostal VARCHAR(255) NULL               
+);
+
+
+-- EXO TD4
+
+-- Créez une table Villes qui contiendra les colonnes Nom, Superficie et Population
+
+
+
+CREATE TABLE Villes (
+    Nom VARCHAR(50) PRIMARY KEY,   
+    Superficie INT NOT NULL,       
+    Population INT NOT NULL        
+);
+
+
+
+-- Remplissez cette table des villes de Arles, Marseille, Nice et Paris
+
+
+INSERT INTO Villes (Nom, Superficie, Population) 
+VALUES 
+    ('Arles', 759, 52963), 
+    ('Marseille', 240, 870018), 
+    ('Nice', 71, 342522), 
+    ('Paris', 105, 2165423);
+
+
+
+-- Sélectionnez le nom, l’indice de fréquentation, l’année et la superficie de Marseille
+
+
+SELECT 
+    f.COMMUNE AS Nom, 
+    f.Indice_de_frequentation, 
+    f.Annee, 
+    v.Superficie 
+FROM 
+    frequentation_cinema f
+JOIN 
+    Villes v 
+ON 
+    f.COMMUNE = v.Nom
+WHERE 
+    v.Nom = 'Marseille';
+
+
+
+
+-- Affichez le nom de toutes les villes de la table ville avec leur indice de fréquentation, l’année et leur nombre d’habitants
+
+
+
+SELECT 
+    v.Nom, 
+    f.Indice_de_frequentation, 
+    f.Annee, 
+    v.Population 
+FROM 
+    Villes v
+LEFT JOIN 
+    frequentation_cinema f 
+ON 
+    v.Nom = f.COMMUNE;
+
+
+
+-- EXO TD5
+
+CREATE TABLE FrequentationVille (
+    Commune VARCHAR(50) NOT NULL,       -- Nom de la commune
+    Moyenne_Frequentation DECIMAL(10,8) NOT NULL  -- Moyenne de fréquentation
+);
+
+INSERT INTO FrequentationVille (Commune, Moyenne_Frequentation)
+VALUES 
+    ('Rouen', 12.11627119),
+    ('Nancy', 11.88152542),
+    ('Lyon', 10.13525424),
+    ('Lille', 13.39322034),
+    ('Grenoble', 10.85),
+    ('Cergy', 10.14657143),
+    ('Cannes', 12.15915254),
+    ('Bordeaux', 10.41525424),
+    ('Avignon', 11.40135593),
+    ('Annecy', 11.79457627);
